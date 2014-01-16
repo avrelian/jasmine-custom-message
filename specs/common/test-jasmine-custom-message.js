@@ -392,12 +392,10 @@
   };
 
   if (isBrowserEnv) {
-    if (global.jasmine && global.jasmine.initJasmineCustomMessage) {
-      global.jasmine.initJasmineCustomMessage.testJasmineCustomMessage = test;
-    }
+    test();
   } else {
     if (isCommonJS) {
-      exports.test = test;
+      exports.test = test();
     }
   }
 })();

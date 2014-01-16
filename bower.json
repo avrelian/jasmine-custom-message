@@ -1,7 +1,7 @@
 {
   "name": "jasmine-custom-message",
   "description": "custom failure message on any jasmine assertion",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "homepage": "https://github.com/avrelian/jasmine-custom-message",
   "authors": [{
     "name": "Sergey Radchenko",
@@ -13,6 +13,9 @@
     "url": "git@github.com:avrelian/jasmine-custom-message.git"
   },
   "main": "jasmine-custom-message.js",
+  "dependencies": {
+    "jasmine-1.3.1": "https://github.com/pivotal/jasmine.git#v1.3.1"
+  },
   "keywords": [
     "jasmine",
     "error message",

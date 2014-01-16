@@ -10,19 +10,16 @@
     return htmlReporter.specFilter(spec);
   };
 
+  var currentWindowOnload = window.onload;
+
   window.onload = function() {
+    if (currentWindowOnload) {
+      currentWindowOnload();
+    }
     execJasmine();
   };
 
   function execJasmine() {
-    if (window.jasmine && window.jasmine.initJasmineCustomMessage) {
-      var jcm = window.jasmine.initJasmineCustomMessage;
-      jcm.wrapReporter();
-      jcm.testJasmine();
-      jcm.wrapItAndExpect();
-      jcm.testJasmineCustomMessage();
-    }
-
     jasmineEnv.execute();
   }
 

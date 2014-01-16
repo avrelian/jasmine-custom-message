@@ -1,5 +1,6 @@
 .jshintrc
 .npmignore
+.bowerrc
 .idea
 bower_components
 docs

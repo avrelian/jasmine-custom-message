@@ -91,32 +91,27 @@
           updateMessage(assertion, expectedMessage[index]);
         }
       });
-
     }
   };
 
   var wrapReportSpecResults = function() {
-    var firstReporter = jasmine.getEnv().reporter.subReporters_[0];
+    if (global.jasmine) {
+      var firstReporter = jasmine.getEnv().reporter.subReporters_[0];
 
-    if (!firstReporter.wrappedForCustomMessages) {
       firstReporter.reportSpecResults = (function(reportSpecResults) {
-        var wrappedReportSpecResults = function(spec) {
+        return function(spec) {
           updateSpec(spec);
           reportSpecResults.apply(firstReporter, arguments);
         };
-        wrappedReportSpecResults.wrappedForCustomMessages = true;
-        return wrappedReportSpecResults;
       })(firstReporter.reportSpecResults);
     }
   };
 
   if (isBrowserEnv) {
-    if (global.jasmine && global.jasmine.initJasmineCustomMessage) {
-      global.jasmine.initJasmineCustomMessage.wrapReporter = wrapReportSpecResults;
-    }
+    wrapReportSpecResults();
   } else {
     if (isCommonJS) {
-      exports.wrap = wrapReportSpecResults;
+      exports.wrap = wrapReportSpecResults();
     }
   }
 })();
