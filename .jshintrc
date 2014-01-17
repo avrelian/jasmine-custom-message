@@ -18,6 +18,8 @@
     "jasmine": false,
     "describe": false,
     "it": false,
-    "expect": false
+    "expect": false,
+    "expectMessageToEqual": false,
+    "since": false
   }
 }

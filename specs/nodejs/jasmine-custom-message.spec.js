@@ -1,5 +1,7 @@
 'use strict';
 
-require('../common/prepare-to-update-failed-assertion-messages');
-require('../../jasmine-custom-message');
-require('../common/test-jasmine-custom-message');
+var path = '../common/';
+
+require(path + 'expect-message-to-equal');
+require('../' + path + 'jasmine-custom-message');
+require(path + 'test-jasmine-custom-message');
