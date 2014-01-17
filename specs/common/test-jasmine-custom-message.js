@@ -5,12 +5,21 @@
   var isBrowserEnv = global.window && global === global.window;
   var isCommonJS = typeof module !== 'undefined' && module.exports;
 
-//  var expectMessageToEqual = global.expectMessageToEqual;
-//  var since = global.since;
+  var expectMessageToEqual = global.expectMessageToEqual;
+  var since = global.since;
 
   var test = function() {
 
-    describe('jasmine with jasmine-custom-message', function () {
+    describe('foo', function() {
+      it('bar', function() {
+        debugger;
+//        expectMessageToEqual("bla-bla-bla").
+        since('bla-bla-bla').
+        expect(3).toEqual(2);
+      });
+    });
+
+    xdescribe('jasmine with jasmine-custom-message', function () {
 
       describe('should work as it did before', function() {
 
