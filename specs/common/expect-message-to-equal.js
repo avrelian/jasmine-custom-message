@@ -79,36 +79,24 @@
     return createMessage('See diff of expected and actual message', colorScheme, messagesDiff());
   };
 
-  var wrapAddExpectationResult = function(assertion) {
-    assertion.addExpectationResult = (function(addExpectationResult) {
-      return function(passed, data) {
-        if (data.message === assertion.expectedMessage) {
-          passed = true;
-          data.passed = true;
-          delete data.message;
-        } else {
-          data.message = getMessage(data.message, assertion.expectedMessage);
-        }
+  var wrapAddMatcherResult = function(assertion, expectedMessage) {
+    var addMatcherResult = assertion.spec.addMatcherResult;
+    assertion.spec.addMatcherResult = function(result) {
+      if (result.message === expectedMessage) {
+        result.passed_ = true;
+        delete result.message;
+      } else {
+        result.message = getMessage(result.message, expectedMessage);
+      }
 
-        addExpectationResult(passed, data);
-      };
-    })(assertion.addExpectationResult);
-  };
-
-  var wrapGlobalExpect = function() {
-    global.expect = (function(expect) {
-      return function(actual) {
-        var assertion = expect(actual);
-        wrapAddExpectationResult(assertion);
-        return assertion;
-      };
-    })(global.expect);
+      addMatcherResult.call(assertion.spec, result);
+    };
   };
 
   var wrapExpect = function(expect, expectedMessage) {
     return function(actual) {
       var assertion = expect(actual);
-      assertion.expectedMessage = expectedMessage.toString();
+      wrapAddMatcherResult(assertion, expectedMessage.toString());
       return assertion;
     };
   };
@@ -130,17 +118,12 @@
     };
   };
 
-  var init = function() {
-    wrapGlobalExpect();
-    defineExpectMessageToEqual();
-  };
-
 
   if (isBrowserEnv) {
-    init();
+    defineExpectMessageToEqual();
   } else {
     if (isCommonJS) {
-      module.exports = init();
+      module.exports = defineExpectMessageToEqual();
     }
   }
 })();

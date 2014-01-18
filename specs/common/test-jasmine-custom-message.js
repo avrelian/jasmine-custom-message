@@ -10,16 +10,7 @@
 
   var test = function() {
 
-    describe('foo', function() {
-      it('bar', function() {
-        debugger;
-//        expectMessageToEqual("bla-bla-bla").
-        since('bla-bla-bla').
-        expect(3).toEqual(2);
-      });
-    });
-
-    xdescribe('jasmine with jasmine-custom-message', function () {
+    describe('jasmine with jasmine-custom-message', function () {
 
       describe('should work as it did before', function() {
 
@@ -70,8 +61,8 @@
 
               it('string', function() {
                 expectMessageToEqual("2 bla-bla-bla 3").
-                since(function() {
-                  return this.expected + ' bla-bla-bla ' + this.actual;
+                since(function(expected) {
+                  return expected + ' bla-bla-bla ' + this.actual;
                 }).
                 expect(3).toEqual(2);
               });
@@ -98,8 +89,8 @@
                 it('string', function() {
                   expectMessageToEqual("2 bla-bla-bla 3").
                   since(function() {
-                    return function() {
-                      return this.expected + ' bla-bla-bla ' + this.actual;
+                    return function(expected) {
+                      return expected + ' bla-bla-bla ' + this.actual;
                     };
                   }).
                   expect(3).toEqual(2);
@@ -194,14 +185,14 @@
 
           it('all assertions', function() {
             expectMessageToEqual("2 bla-bla-bla 3").
-            since(function() {
-              return this.expected + ' bla-bla-bla ' + this.actual;
+            since(function(expected) {
+              return expected + ' bla-bla-bla ' + this.actual;
             }).
             expect(3).toEqual(2);
 
             expectMessageToEqual("5 foo-bar-baz 4").
-            since(function() {
-              return this.expected + ' foo-bar-baz ' + this.actual;
+            since(function(expected) {
+              return expected + ' foo-bar-baz ' + this.actual;
             }).
             expect(4).toEqual(5);
           });
@@ -211,8 +202,8 @@
             expect(3).toEqual(2);
 
             expectMessageToEqual("5 foo-bar-baz 4").
-            since(function() {
-              return this.expected + ' foo-bar-baz ' + this.actual;
+            since(function(expected) {
+              return expected + ' foo-bar-baz ' + this.actual;
             }).
             expect(4).toEqual(5);
           });
@@ -243,7 +234,7 @@
             describe('function returning', function() {
 
               it('null', function() {
-                expectMessageToEqual("Expected 3 to equal 2.").
+                expectMessageToEqual("You cannot use `null` as a custom message").
                 since(function() {
                   return null;
                 }).
@@ -251,7 +242,7 @@
               });
 
               it('undefined', function() {
-                expectMessageToEqual("Expected 3 to equal 2.").
+                expectMessageToEqual("You cannot use `undefined` as a custom message").
                 since(function() {
                   return undefined;
                 }).
