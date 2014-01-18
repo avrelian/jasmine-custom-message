@@ -59,8 +59,8 @@ You can use expected and actual value of the assertion in your custom message.
 ```
 describe('test', function() {
   it('should be ok', function() {
-    since(function() {
-      return this.actual + ' =/= ' + this.expected;
+    since(function(expected) {
+      return this.actual + ' =/= ' + expected;
     }).
     expect(3).toEqual(4); // => '3 =/= 4'
   });
