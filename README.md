@@ -75,7 +75,7 @@ bower install jasmine-custom-message --save-dev
 * include `jasmine-custom-message.js` into your HTML file next to `jasmine` script
 ```
 <script src="PATH-TO/jasmine.js"></script>
-<script src="PATH-TO/jasmine-custom-message.js"></script>
+<script src="PATH-TO/jasmine-custom-message.js"></script>   
 ```
 
 ## Node.js usage
@@ -96,7 +96,7 @@ require('jasmine-custom-message');
 
 ## Change log
 
-`v0.6.0` - 2014.01.15 - BROKEN COMPATIBILITY!
+`v0.6.0` - 2014.01.18 - **BROKEN COMPATIBILITY!**
   * all the magic moved into newly introduced `since` function
   * restored automatic initiation of the script upon inclusion (browser) or require (Node.js)
   * cleaned specs
@@ -109,7 +109,7 @@ require('jasmine-custom-message');
   * registered bower package
   * made disambiguation and readability improvements
 
-`v0.2.0` - 2014.01.10 - BROKEN COMPATIBILITY!
+`v0.2.0` - 2014.01.10 - **BROKEN COMPATIBILITY!**
   * custom messages is supplied as the third argument for jasmine `it` function
 
 `v0.1.0` - 2014.01.08
