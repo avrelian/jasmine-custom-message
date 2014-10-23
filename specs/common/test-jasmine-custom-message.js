@@ -6,7 +6,6 @@
   var isCommonJS = typeof module !== 'undefined' && module.exports;
 
   var expectMessageToEqual = global.expectMessageToEqual;
-  var since = global.since;
 
   var test = function() {
 
