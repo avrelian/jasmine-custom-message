@@ -10,7 +10,7 @@
 
   var test = function() {
 
-    describe('jasmine with jasmine-custom-message', function () {
+    describe('jasmine with jasmine-custom-message', function() {
 
       describe('should work as it did before', function() {
 
@@ -28,6 +28,11 @@
 
           expectMessageToEqual("Expected 3 to equal 2.").
           expect(3).toEqual(2);
+        });
+
+        it('with inverse assertion', function() {
+          expectMessageToEqual("Expected 2 not to equal 2.").
+          expect(2).not.toEqual(2);
         });
 
       });
@@ -180,7 +185,6 @@
 
         });
 
-
         describe('custom failure messages for', function() {
 
           it('all assertions', function() {
@@ -206,6 +210,12 @@
               return expected + ' foo-bar-baz ' + this.actual;
             }).
             expect(4).toEqual(5);
+          });
+
+          it('with inverse assertion', function() {
+            expectMessageToEqual("2 bla-bla-bla 2").
+            since("2 bla-bla-bla 2").
+            expect(2).not.toEqual(2);
           });
 
         });

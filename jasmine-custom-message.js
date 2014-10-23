@@ -51,7 +51,7 @@
     return function(actual) {
       var assertion = expect(actual);
       if (! ofType(customMessage, 'undefined', 'null')) {
-        assertion.message = function() {
+        assertion.message = assertion.not.message = function() {
           return getMessage(assertion, customMessage, arguments);
         };
       }
