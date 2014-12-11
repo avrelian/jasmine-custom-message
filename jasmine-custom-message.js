@@ -44,7 +44,12 @@
       }
     }
 
-    return message.toString();
+    message = message.toString();
+
+    message = message.replace("#{act}", data.actual);
+    message = message.replace("#{exp}", data.expected);
+
+    return message;
   };
 
   var wrapExpect = function(expect, customMessage) {
