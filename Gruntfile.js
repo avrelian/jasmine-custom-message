@@ -18,14 +18,28 @@ module.exports = function(grunt) {
     jasmine_node: {
       // options have no effect in `grunt-jasmine-node`#v0.1.0
       test: {}
+    },
+
+    protractor: {
+      options: {
+      },
+      jasmine_custom_message: {
+        options: {
+          configFile: 'specs/protractor/conf.js',
+          args: {
+            verbose: true
+          }
+        }
+      }
     }
 
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-jasmine-node');
+  grunt.loadNpmTasks('grunt-protractor-runner');
 
-  grunt.registerTask('test', ['jshint', 'jasmine_node']);
+  grunt.registerTask('test', ['jshint', 'jasmine_node','protractor']);
   grunt.registerTask('default', ['test']);
 
 };
