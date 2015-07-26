@@ -7,7 +7,11 @@
   }
 
   var isBrowserEnv = global.window && global === global.window;
-  var isCommonJS = typeof module != 'undefined' && typeof module.exports == 'object';
+  var isCommonJS = typeof module !== 'undefined' && typeof module.exports === 'object';
+
+  var isPromise = function(val) {
+    return typeof val.then === 'function';
+  };
 
   var diff;
   if (isBrowserEnv) {
@@ -18,6 +22,12 @@
     }
   }
 
+  // toEqual matcher does not distinguish different Error objects
+  jasmine.getEnv().addEqualityTester(function(a, b) {
+    if (a instanceof Error && b instanceof Error) {
+      return (a.message === b.message);
+    }
+  });
 
   var getMessage = function(actualMessage, expectedMessage) {
     actualMessage = actualMessage ? actualMessage.toString() : '';
@@ -93,18 +103,74 @@
     };
   };
 
-  var wrapExpect = function(expect, expectedMessage) {
+  var wrapExpect = function(expect, expectedMessage, customMessage) {
     return function(actual) {
+      if (isPromise(actual)) {
+        return wrapMatchers(customMessage, actual, expectedMessage);
+      }
+
       var assertion = expect(actual);
       wrapAddMatcherResult(assertion, expectedMessage.toString());
       return assertion;
     };
   };
 
+  var match = function(assertion, matcher, not, expected) {
+    if (not) {
+      assertion.not[matcher](expected);
+    } else {
+      assertion[matcher](expected);
+    }
+  };
+
+  var wrapMatcher = function(matcher, promiseActual, not, customMessage, expectedMessage) {
+    return function(expected) {
+      promiseActual.then(function(actual) {
+        var assertion = global.expectMessageToEqual(expectedMessage).since(customMessage).expect(actual);
+
+        if (isPromise(expected)) {
+          expected.then(function(expectedValue) {
+            match(assertion, matcher, not, expectedValue);
+          }, function(expectedError) {
+            match(assertion, matcher, not, expectedError);
+          });
+        } else {
+          match(assertion, matcher, not, expected);
+        }
+      }, function(actualError) {
+        var assertion = global.expectMessageToEqual(expectedMessage).since(customMessage).expect(actualError);
+
+        if (isPromise(expected)) {
+          expected.then(function(expectedValue) {
+            match(assertion, matcher, not, expectedValue);
+          }, function(expectedError) {
+            match(assertion, matcher, not, expectedError);
+          });
+        } else {
+          match(assertion, matcher, not, expected);
+        }
+      });
+    };
+  };
+
+  // slightly modified code from https://github.com/angular/jasminewd
+  var wrapMatchers = function(customMessage, promiseActual, expectedMessage) {
+    var promises = {not: {}};
+    var env = jasmine.getEnv();
+    var matchersClass = env.currentSpec.matchersClass || env.matchersClass;
+
+    for (var matcher in matchersClass.prototype) {
+      promises[matcher] = wrapMatcher(matcher, promiseActual, false, customMessage, expectedMessage);
+      promises.not[matcher] = wrapMatcher(matcher, promiseActual, true, customMessage, expectedMessage);
+    }
+
+    return promises;
+  };
+
   var wrapSince = function(since, expectedMessage) {
     return function(customMessage) {
       var sinceObj = since(customMessage);
-      sinceObj.expect = wrapExpect(sinceObj.expect, expectedMessage);
+      sinceObj.expect = wrapExpect(sinceObj.expect, expectedMessage, customMessage);
       return sinceObj;
     };
   };

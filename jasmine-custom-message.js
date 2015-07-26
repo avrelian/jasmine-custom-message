@@ -15,8 +15,11 @@
   }
 
   var isBrowserEnv = global.window && global === global.window;
-  var isCommonJS = typeof module != 'undefined' && typeof module.exports == 'object';
+  var isCommonJS = typeof module !== 'undefined' && typeof module.exports === 'object';
 
+  var isPromise = function(val) {
+    return typeof val.then === 'function';
+  };
 
   var ofType = function(val) {
     var types = [].slice.call(arguments, 1);
@@ -47,8 +50,64 @@
     return message.toString();
   };
 
+  var match = function(assertion, matcher, not, expected) {
+    if (not) {
+      assertion.not[matcher](expected);
+    } else {
+      assertion[matcher](expected);
+    }
+  };
+
+  var wrapMatcher = function(matcher, promiseActual, not, customMessage) {
+    return function(expected) {
+      promiseActual.then(function(actual) {
+        var assertion = global.since(customMessage).expect(actual);
+
+        if (isPromise(expected)) {
+          expected.then(function(expectedValue) {
+            match(assertion, matcher, not, expectedValue);
+          }, function(expectedError) {
+            match(assertion, matcher, not, expectedError);
+          });
+        } else {
+          match(assertion, matcher, not, expected);
+        }
+      }, function(actualError) {
+        var assertion = global.since(customMessage).expect(actualError);
+
+        if (isPromise(expected)) {
+          expected.then(function(expectedValue) {
+            match(assertion, matcher, not, expectedValue);
+          }, function(expectedError) {
+            match(assertion, matcher, not, expectedError);
+          });
+        } else {
+          match(assertion, matcher, not, expected);
+        }
+      });
+    };
+  };
+
+  // slightly modified code from https://github.com/angular/jasminewd
+  var wrapMatchers = function(customMessage, promiseActual) {
+    var promises = {not: {}};
+    var env = jasmine.getEnv();
+    var matchersClass = env.currentSpec.matchersClass || env.matchersClass;
+
+    for (var matcher in matchersClass.prototype) {
+      promises[matcher] = wrapMatcher(matcher, promiseActual, false, customMessage);
+      promises.not[matcher] = wrapMatcher(matcher, promiseActual, true, customMessage);
+    }
+
+    return promises;
+  };
+
   var wrapExpect = function(expect, customMessage) {
     return function(actual) {
+      if (isPromise(actual)) {
+        return wrapMatchers(customMessage, actual);
+      }
+
       var assertion = expect(actual);
       if (! ofType(customMessage, 'undefined', 'null')) {
         assertion.message = assertion.not.message = function() {

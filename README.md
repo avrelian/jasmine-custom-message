@@ -67,6 +67,21 @@ describe('test', function() {
 });
 ```
 
+Moreover, you can use a promise as an argument of expect or matcher functions. Promise is recognized by `then` method, so be careful if your non-promise object has this method.
+
+#### Example (with a little help of protractor)
+
+```
+describe('test', function() {
+  it('should be ok', function() {
+    since(function(expected) {
+      return this.actual + ' =/= ' + expected;
+    }).
+    expect(protractor.promise.fulfilled(3)).toEqual(protractor.promise.fulfilled(4)); // => '3 =/= 4'
+  });
+});
+```
+
 ## Front-end usage
 *  install the bower package from github
 ```
@@ -95,6 +110,10 @@ require('jasmine-custom-message');
 ```
 
 ## Change log
+
+`v0.8.0` - 2015.07.26 - **Be careful of objects with `then` method, since they are treated as promises**
+  * fixed issue with custom failure messages on promised assertions
+  * updated specs
 
 `v0.7.0` - 2014.10.23
   * fixed issue with custom failure messages on inverse assertions
