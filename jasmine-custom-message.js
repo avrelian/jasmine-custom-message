@@ -27,7 +27,13 @@
     return types.indexOf(valType) > -1;
   };
 
-  var getMessage = function(assertion, message, args) {
+  var formatString = function(data, message) {
+    message = message.replace(/#\{actual\}/g, data.actual);
+    message = message.replace(/#\{expected\}/g, data.expected);
+    return message;
+  };
+
+  var getMessage = function(assertion, message, data, args) {
     while (! ofType(message, 'string', 'number', 'boolean')) {
       switch (true) {
         case ofType(message, 'undefined', 'null'):
@@ -45,6 +51,10 @@
         default:
           message = 'N/A';
       }
+    }
+
+    if (ofType(message, 'string')) {
+      return formatString(data, message);
     }
 
     return message.toString();
@@ -111,7 +121,11 @@
       var assertion = expect(actual);
       if (! ofType(customMessage, 'undefined', 'null')) {
         assertion.message = assertion.not.message = function() {
-          return getMessage(assertion, customMessage, arguments);
+          var data = {
+            actual: actual,
+            expected: arguments[0]
+          };
+          return getMessage(assertion, customMessage, data, arguments);
         };
       }
       return assertion;

@@ -1,13 +1,13 @@
 jasmine-custom-message
 ======================
-> **works with `jasmine v1.3.1`** (for work with `jasmine v2.0.0` see branch [`jasmine-2-0`](https://github.com/avrelian/jasmine-custom-message/tree/jasmine-2-0))
+> **works with `jasmine v1.3`** (for work with `jasmine v2` see [`jasmine2-custom-message`](https://github.com/avrelian/jasmine2-custom-message))
 
 
 This script makes it possible to use your own failure message on any jasmine assertion.
 
 #### Example
 
-```
+```js
 describe('the story', function() {
   it('should finish ok', function() {
     since('all cats are grey in the dark').
@@ -23,7 +23,7 @@ All the magic happens in `since` function. That returns an object with a propert
 
 #### Example
 
-```
+```js
 describe('test', function() {
   it('should be ok', function() {
     since(function() {
@@ -41,7 +41,7 @@ You can use jasmine as you did before, since `jasmine-custom-message` does not r
 
 #### Example
 
-```
+```js
 describe('test', function() {
   it('should be ok', function() {
     expect(3).toEqual(4); // => ordinary jasmine message
@@ -52,11 +52,14 @@ describe('test', function() {
 
 ## Powerful
 
-You can use expected and actual value of the assertion in your custom message.
+You can use expected and actual value of the assertion in your custom message, by:
 
-#### Example
+  * Passing a function, and using `this.actual` and `this.expected`
+  * Passing a string, and using `#{actual}` and `#{expected}`
 
-```
+#### Example using a function
+
+```js
 describe('test', function() {
   it('should be ok', function() {
     since(function(expected) {
@@ -67,11 +70,22 @@ describe('test', function() {
 });
 ```
 
+#### Example using a string
+
+```js
+describe('test', function() {
+  it('should be ok', function() {
+    since('#{actual} =/= #{expected}').
+    expect(3).toEqual(4); // => '3 =/= 4'
+  });
+});
+```
+
 Moreover, you can use a promise as an argument of expect or matcher functions. Promise is recognized by `then` method, so be careful if your non-promise object has this method.
 
 #### Example (with a little help of protractor)
 
-```
+```js
 describe('test', function() {
   it('should be ok', function() {
     since(function(expected) {
@@ -88,7 +102,7 @@ describe('test', function() {
 bower install jasmine-custom-message --save-dev
 ```
 * include `jasmine-custom-message.js` into your HTML file next to `jasmine` script
-```
+```html
 <script src="PATH-TO/jasmine.js"></script>
 <script src="PATH-TO/jasmine-custom-message.js"></script>   
 ```
@@ -105,14 +119,17 @@ npm install jasmine-custom-message --save-dev
 ```
 
 *  require it in your spec file before your tests
-```
+```js
 require('jasmine-custom-message');
 ```
 
 ## Change log
 
-`v0.8.0` - 2015.07.26 - **Be careful of objects with `then` method, since they are treated as promises**
+`v0.8.0` - 2015.08.05 - **Be careful of objects with `then` method, since they are treated as promises**
   * fixed issue with custom failure messages on promised assertions
+  * implemented "format string" functionality: #{actual} and #{expected}
+  * configured `protractor` environment
+  * corrected displaying of colors in tests running through `protractor`
   * updated specs
 
 `v0.7.0` - 2014.10.23
@@ -141,4 +158,4 @@ require('jasmine-custom-message');
 
 ## Release plan
 
-`v0.8.0` - some new features (based on requests from Issues)
+`v0.9.0` - some new features (based on requests from Issues)
