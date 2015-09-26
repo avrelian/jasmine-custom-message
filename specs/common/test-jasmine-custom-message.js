@@ -40,6 +40,12 @@
 
         describe('custom failure message when it is supplied', function() {
 
+          it('and expected value is undefined', function() {
+            expectMessageToEqual("expected is undefined").
+                since('expected is undefined').
+                expect(undefined).toEqual('something');
+          });
+
           describe('with a', function() {
 
             describe('string', function() {

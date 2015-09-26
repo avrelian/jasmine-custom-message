@@ -18,7 +18,7 @@
   var isCommonJS = typeof module !== 'undefined' && typeof module.exports === 'object';
 
   var isPromise = function(val) {
-    return typeof val.then === 'function';
+    return val && typeof val.then === 'function';
   };
 
   var ofType = function(val) {
