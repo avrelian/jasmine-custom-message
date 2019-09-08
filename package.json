@@ -1,7 +1,7 @@
 {
   "name": "jasmine-custom-message",
   "description": "custom failure message on any jasmine assertion",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "homepage": "https://github.com/avrelian/jasmine-custom-message",
   "author": {
     "name": "Sergey Radchenko",
@@ -29,7 +29,7 @@
     "test": "grunt test"
   },
   "devDependencies": {
-    "diff": "~1.0.8",
+    "diff": "~3.5.0",
     "es5-shim": "~4.0.0",
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.6.0",
